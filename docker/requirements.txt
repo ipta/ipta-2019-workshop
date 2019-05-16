@@ -1,0 +1,13 @@
+astropy
+git+https://github.com/vallis/libstempo --install-option='--with-tempo2=/opt/nanograv'
+healpy 
+line_profiler 
+jplephem 
+corner 
+scikit-sparse --global-option=build_ext --global-option="-L/usr/local/lib"
+git+https://github.com/dfm/acor.git@master
+git+https://github.com/jellis18/PTMCMCSampler@master
+git+https://github.com/mtlam/PyPulse.git
+git+https://github.com/nanograv/PINT.git
+git+https://github.com/nanograv/enterprise
+git+https://github.com/stevertaylor/enterprise_extensions
