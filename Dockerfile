@@ -19,7 +19,7 @@ RUN conda install -y h5py numexpr statsmodels astropy ephem mpi4py line_profiler
 
 RUN apt update && apt install -y tightvncserver websockify supervisor xinit xterm xfce4 xfce4-terminal cmake build-essential gfortran pgplot5 tcsh \
     dh-autoreconf pgplot5 libfftw3-dev libcfitsio-dev latex2html \ 
-    pkg-config libglib2.0-dev curl imagemagick less dvipng openmpi-common openmpi-bin libgsl-dev
+    pkg-config libglib2.0-dev curl imagemagick less dvipng openmpi-common openmpi-bin libgsl-dev gvim
 RUN apt clean
 RUN pip install git+https://github.com/ryanlovett/nbnovnc
 RUN pip install tornado==5.1.1
@@ -93,8 +93,8 @@ RUN bash -c "source activate python2 && git clone https://github.com/LindleyLent
 
 # get extra ephemeris
 RUN cd /opt/pulsar/share/tempo2/ephemeris && \
-    wget -q ftp://ssd.jpl.nasa.gov/pub/eph/planets/bsp/de435t.bsp && \
-    wget -q ftp://ssd.jpl.nasa.gov/pub/eph/planets/bsp/de436t.bsp && \
+    wget -q https://data.nanograv.org/ephem/de435t.bsp && \
+    wget -q https://data.nanograv.org/ephem/de436t.bsp && \
     wget -q https://github.com/nanograv/tempo/raw/master/ephem/DE435.1950.2050 && \
     wget -q https://github.com/nanograv/tempo/raw/master/ephem/DE436.1950.2050
 
