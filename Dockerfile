@@ -94,9 +94,7 @@ RUN bash -c "source activate python2 && git clone https://github.com/LindleyLent
 # get extra ephemeris
 RUN cd /opt/pulsar/share/tempo2/ephemeris && \
     wget -q https://data.nanograv.org/ephem/de435t.bsp && \
-    wget -q https://data.nanograv.org/ephem/de436t.bsp && \
-    wget -q https://github.com/nanograv/tempo/raw/master/ephem/DE435.1950.2050 && \
-    wget -q https://github.com/nanograv/tempo/raw/master/ephem/DE436.1950.2050
+    wget -q https://data.nanograv.org/ephem/de436t.bsp 
 
 RUN wget -q http://faculty.cse.tamu.edu/davis/SuiteSparse/SuiteSparse-5.1.0.tar.gz && \
     tar -xzf SuiteSparse-5.1.0.tar.gz && \
