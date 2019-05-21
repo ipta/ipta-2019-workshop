@@ -19,7 +19,7 @@ RUN conda install -y h5py numexpr statsmodels astropy ephem mpi4py line_profiler
 
 RUN apt update && apt install -y tightvncserver websockify supervisor xinit xterm xfce4 xfce4-terminal cmake build-essential gfortran pgplot5 tcsh \
     dh-autoreconf pgplot5 libfftw3-dev libcfitsio-dev latex2html \ 
-    pkg-config libglib2.0-dev curl imagemagick less dvipng openmpi-common openmpi-bin libgsl-dev gvim
+    pkg-config libglib2.0-dev curl imagemagick less dvipng openmpi-common openmpi-bin libgsl-dev vim-gtk3
 RUN apt clean
 RUN pip install git+https://github.com/ryanlovett/nbnovnc
 RUN pip install tornado==5.1.1
