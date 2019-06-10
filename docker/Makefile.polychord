@@ -3,8 +3,8 @@ DEBUG =
 export DEBUG
 
 # Whether to use MPI or not (leave blank if running without MPI)
-MPI =  0
-export MPI
+#MPI =  0
+#export MPI
 
 # The compiler type:
 # This sets up the correct compiler flags

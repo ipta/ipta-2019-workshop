@@ -167,11 +167,18 @@ RUN conda install swig && /bin/bash -c "source activate python2 && conda install
 RUN /bin/bash -c 'source activate python2; \
     ./bootstrap; \
     ./configure F77=gfortran --prefix=$PSRHOME --enable-shared CFLAGS="-fPIC" FFLAGS="-fPIC";\
-    ./packages/epsic.csh;'
-
-RUN /bin/bash -c 'source activate python2; CPPFLAGS="-I/opt/pulsar/include" LDFLAGS="-L/opt/pulsar/lib" ./configure F77=gfortran --prefix=$PSRHOME --enable-shared CFLAGS="-fPIC" FFLAGS="-fPIC";\
+    ./packages/epsic.csh;\
+    ./configure F77=gfortran --prefix=$PSRHOME --enable-shared CFLAGS="-fPIC" FFLAGS="-fPIC";\
     make && make install && make clean;'
 
+RUN cd MultiNest_v3.11 && make && make libnest3.so && cp libnest3* /usr/lib
+RUN apt install libblas-dev liblapack-dev gedit vim evince vim-gtk openssh-client
+
+RUN bash -c "source activate python2 && git clone https://github.com/LindleyLentati/TempoNest.git && \
+              cd TempoNest && ./autogen.sh && CPPFLAGS=\"-I/opt/pulsar/include\" \
+                LDFLAGS=\"-L/opt/pulsar/lib\" ./configure --prefix=/opt/pulsar && cd PolyChord && \
+                cp /var/tmp/Makefile Makefile && make \
+                 && make libchord.so && cp src/libchord* /usr/lib && cd ../ && make && make install"
 RUN chown -R jovyan /home/jovyan
 RUN apt clean
 RUN conda clean -a
