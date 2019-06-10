@@ -172,7 +172,7 @@ RUN /bin/bash -c 'source activate python2; \
     make && make install && make clean;'
 
 RUN cd MultiNest_v3.11 && make && make libnest3.so && cp libnest3* /usr/lib
-RUN apt install libblas-dev liblapack-dev
+RUN apt install libblas-dev liblapack-dev gedit vim evince vim-gtk openssh-client
 
 RUN bash -c "source activate python2 && git clone https://github.com/LindleyLentati/TempoNest.git && \
               cd TempoNest && ./autogen.sh && CPPFLAGS=\"-I/opt/pulsar/include\" \
