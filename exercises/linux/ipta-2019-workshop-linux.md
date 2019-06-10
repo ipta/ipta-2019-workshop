@@ -383,7 +383,7 @@ You can also use the following options:
     Word count: -w
     Byte count: -c
 
-````
+```
 $ wc -l temp.txt
 6 temp.txt
 
