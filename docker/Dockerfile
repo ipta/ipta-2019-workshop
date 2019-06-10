@@ -167,8 +167,9 @@ RUN conda install swig && /bin/bash -c "source activate python2 && conda install
 RUN /bin/bash -c 'source activate python2; \
     ./bootstrap; \
     ./configure F77=gfortran --prefix=$PSRHOME --enable-shared CFLAGS="-fPIC" FFLAGS="-fPIC";\
-    ./packages/epsic.csh;\
-    ./configure F77=gfortran --prefix=$PSRHOME --enable-shared CFLAGS="-fPIC" FFLAGS="-fPIC";\
+    ./packages/epsic.csh;'
+
+RUN /bin/bash -c 'source activate python2; CPPFLAGS="-I/opt/pulsar/include" LDFLAGS="-L/opt/pulsar/lib" ./configure F77=gfortran --prefix=$PSRHOME --enable-shared CFLAGS="-fPIC" FFLAGS="-fPIC";\
     make && make install && make clean;'
 
 RUN chown -R jovyan /home/jovyan
