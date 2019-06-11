@@ -78,19 +78,6 @@ RUN git clone https://bitbucket.org/psrsoft/tempo2 && \
 ENV TEMPO2=/opt/pulsar/share/tempo2
 RUN rm -rf tempo2
 
-
-COPY MultiNest_v3.11.tar.gz ./
-RUN tar xvfz MultiNest_v3.11.tar.gz
-COPY Makefile MultiNest_v3.11/Makefile
-COPY Makefile.polychord /var/tmp/Makefile
-RUN cd MultiNest_v3.11 && make && make libnest3.so && cp libnest3* /usr/lib
-
-RUN bash -c "source activate python2 && git clone https://github.com/LindleyLentati/TempoNest.git && \
-              cd TempoNest && ./autogen.sh && CPPFLAGS=\"-I/opt/pulsar/include\" \
-                LDFLAGS=\"-L/opt/pulsar/lib\" ./configure --prefix=/opt/pulsar && cd PolyChord && \
-                cp /var/tmp/Makefile Makefile && make \
-                 && make libchord.so && cp src/libchord* /usr/lib && cd ../ && make && make install"
-
 # get extra ephemeris
 RUN cd /opt/pulsar/share/tempo2/ephemeris && \
     wget -q ftp://ssd.jpl.nasa.gov/pub/eph/planets/bsp/de435t.bsp && \
@@ -165,20 +152,29 @@ RUN git clone git://git.code.sf.net/p/psrchive/code psrchive
 WORKDIR /opt/pulsar/src/psrchive 
 RUN conda install swig && /bin/bash -c "source activate python2 && conda install swig"
 RUN /bin/bash -c 'source activate python2; \
+    git pull; \
     ./bootstrap; \
     ./configure F77=gfortran --prefix=$PSRHOME --enable-shared CFLAGS="-fPIC" FFLAGS="-fPIC";\
-    ./packages/epsic.csh;\
-    ./configure F77=gfortran --prefix=$PSRHOME --enable-shared CFLAGS="-fPIC" FFLAGS="-fPIC";\
-    make && make install && make clean;'
-
+    ./packages/epsic.csh;'
+COPY local_include.tgz ./
+RUN tar xvfz local_include.tgz
+RUN cp ./Util/resources/toa.h ./local_include/toa.h
+RUN /bin/bash -c 'source activate python2; CPPFLAGS="-I/opt/pulsar/include" LDFLAGS="-L/opt/pulsar/lib" ./configure --prefix=$PSRHOME --enable-shared CFLAGS="-fPIC" FFLAGS="-fPIC";\
+    make -j12 && make install && make clean;'
+WORKDIR /opt/pulsar/src
+COPY MultiNest_v3.11.tar.gz /opt/pulsar/src/
+RUN tar xvfz MultiNest_v3.11.tar.gz 
+COPY Makefile MultiNest_v3.11/
+COPY Makefile.polychord /var/tmp/Makefile
 RUN cd MultiNest_v3.11 && make && make libnest3.so && cp libnest3* /usr/lib
-RUN apt install libblas-dev liblapack-dev gedit vim evince vim-gtk openssh-client
+RUN apt update
+RUN apt install -y libblas-dev liblapack-dev gedit vim evince vim-gtk openssh-client
 
 RUN bash -c "source activate python2 && git clone https://github.com/LindleyLentati/TempoNest.git && \
               cd TempoNest && ./autogen.sh && CPPFLAGS=\"-I/opt/pulsar/include\" \
                 LDFLAGS=\"-L/opt/pulsar/lib\" ./configure --prefix=/opt/pulsar && cd PolyChord && \
                 cp /var/tmp/Makefile Makefile && make \
-                 && make libchord.so && cp src/libchord* /usr/lib && cd ../ && make && make install"
+                 && make libchord.so && cp src/libchord* /usr/lib && cd ../ && make temponest && make temponest install"
 RUN chown -R jovyan /home/jovyan
 RUN apt clean
 RUN conda clean -a
