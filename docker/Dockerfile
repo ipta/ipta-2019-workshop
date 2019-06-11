@@ -175,6 +175,7 @@ RUN bash -c "source activate python2 && git clone https://github.com/LindleyLent
                 LDFLAGS=\"-L/opt/pulsar/lib\" ./configure --prefix=/opt/pulsar && cd PolyChord && \
                 cp /var/tmp/Makefile Makefile && make \
                  && make libchord.so && cp src/libchord* /usr/lib && cd ../ && make temponest && make temponest install"
+RUN cp /opt/pulsar/lib/python2.7/site-packages/* /opt/conda/envs/python2/lib/python2.7/site-packages/
 RUN chown -R jovyan /home/jovyan
 RUN apt clean
 RUN conda clean -a
