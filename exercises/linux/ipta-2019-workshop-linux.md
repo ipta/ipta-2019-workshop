@@ -325,7 +325,7 @@ Here, grep searches input from ps -ef (which outputs all processes in full forma
 $ ps -ef | grep csh
 ```
 
-Sorting
+###Sorting
 The Linux sort command sorts the content of a file or any STDIN, and prints the sorted list to the screen.
 ```
 $ cat temp.txt 
@@ -356,7 +356,7 @@ apple
 ```
 sort -n will sort the output numerically rather than alphabetically.
 
-Word and Line Count
+###Word and Line Count
 
 The wc command reads either STDIN or a list of files and generates
 1) numbers of lines
@@ -394,7 +394,7 @@ $ wc -c temp.txt
 40 temp.txt
 ```
 
-Installing packages
+###Installing packages
 
 This docker image is using ubuntu, and ubutu uses something called "apt" to install packages.  I have neglected to install any advanced text editors or pdf viewers in the docker image, so you may want to install them yourself.  To do this, you'll need to connect to your container as root. So, in a new terminal window do 
 ```
