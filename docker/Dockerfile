@@ -1,5 +1,5 @@
 # Choose your desired base image
-FROM jupyter/scipy-notebook:latest
+FROM jupyter/scipy-notebook:d4cbf2f80a2a
 
 # Create a Python 2.x environment using conda including at least the ipython kernel
 # and the kernda utility. Add any additional packages you want available for use
@@ -176,6 +176,13 @@ RUN bash -c "source activate python2 && git clone https://github.com/LindleyLent
                 cp /var/tmp/Makefile Makefile && make \
                  && make libchord.so && cp src/libchord* /usr/lib && cd ../ && make temponest && make temponest install"
 RUN cp /opt/pulsar/lib/python2.7/site-packages/* /opt/conda/envs/python2/lib/python2.7/site-packages/
+COPY Makefile /opt/pulsar/src/TempoNest/MultiNest/
+RUN bash -c "source activate python2 && cd /opt/pulsar/src/TempoNest && \
+              make clean && ./autogen.sh && CPPFLAGS=\"-I/opt/pulsar/include\" \
+                LDFLAGS=\"-L/opt/pulsar/lib\" ./configure --prefix=/opt/pulsar && cd PolyChord && \
+                cp /var/tmp/Makefile Makefile && make \
+                 && make libchord.so && cp src/libchord* /usr/lib && cd ../ && \
+                  cd Multinest && make && make libnest3.so && cp libnest* /usr/lib/ && cd ../ && make temponest && make temponest install"
 RUN chown -R jovyan /home/jovyan
 RUN apt clean
 RUN conda clean -a
