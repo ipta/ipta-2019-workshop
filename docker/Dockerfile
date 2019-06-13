@@ -182,7 +182,7 @@ RUN bash -c "source activate python2 && cd /opt/pulsar/src/TempoNest && \
                 LDFLAGS=\"-L/opt/pulsar/lib\" ./configure --prefix=/opt/pulsar && cd PolyChord && \
                 cp /var/tmp/Makefile Makefile && make \
                  && make libchord.so && cp src/libchord* /usr/lib && cd ../ && \
-                  cd Multinest && make && make libnest3.so && cp libnest* /usr/lib/ && cd ../ && make temponest && make temponest install"
+                  cd MultiNest && make && make libnest3.so && cp libnest* /usr/lib/ && cd ../ && make temponest && make temponest install"
 RUN chown -R jovyan /home/jovyan
 RUN apt clean
 RUN conda clean -a
