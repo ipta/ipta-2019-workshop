@@ -1,5 +1,5 @@
 # Choose your desired base image
-FROM jupyter/scipy-notebook:latest
+FROM jupyter/scipy-notebook:d4cbf2f80a2a
 
 # Create a Python 2.x environment using conda including at least the ipython kernel
 # and the kernda utility. Add any additional packages you want available for use
@@ -19,7 +19,9 @@ RUN conda install -y h5py numexpr statsmodels astropy ephem mpi4py line_profiler
 
 RUN apt update && apt install -y tightvncserver websockify supervisor xinit xterm xfce4 xfce4-terminal cmake build-essential gfortran pgplot5 tcsh \
     dh-autoreconf pgplot5 libfftw3-dev libcfitsio-dev latex2html \ 
-    pkg-config libglib2.0-dev curl imagemagick less dvipng openmpi-common openmpi-bin libgsl-dev
+    pkg-config libglib2.0-dev curl imagemagick less dvipng openmpi-common \
+    openmpi-bin libgsl-dev libblas-dev liblapack-dev gedit vim evince \
+    vim-gtk openssh-client
 RUN apt clean
 RUN pip install git+https://github.com/ryanlovett/nbnovnc
 RUN pip install tornado==5.1.1
@@ -162,23 +164,13 @@ RUN cp ./Util/resources/toa.h ./local_include/toa.h
 RUN /bin/bash -c 'source activate python2; CPPFLAGS="-I/opt/pulsar/include" LDFLAGS="-L/opt/pulsar/lib" ./configure --prefix=$PSRHOME --enable-shared CFLAGS="-fPIC" FFLAGS="-fPIC";\
     make -j12 && make install && make clean;'
 WORKDIR /opt/pulsar/src
-COPY MultiNest_v3.11.tar.gz /opt/pulsar/src/
-RUN tar xvfz MultiNest_v3.11.tar.gz 
-COPY Makefile MultiNest_v3.11/
-COPY Makefile.polychord /var/tmp/Makefile
-RUN cd MultiNest_v3.11 && make && make libnest3.so && cp libnest3* /usr/lib
-RUN apt update
-RUN apt install -y libblas-dev liblapack-dev gedit vim evince vim-gtk openssh-client
 
-RUN bash -c "source activate python2 && git clone https://github.com/LindleyLentati/TempoNest.git && \
-              cd TempoNest && ./autogen.sh && CPPFLAGS=\"-I/opt/pulsar/include\" \
-                LDFLAGS=\"-L/opt/pulsar/lib\" ./configure --prefix=/opt/pulsar && cd PolyChord && \
-                cp /var/tmp/Makefile Makefile && make \
-                 && make libchord.so && cp src/libchord* /usr/lib && cd ../ && make temponest && make temponest install"
 RUN cp /opt/pulsar/lib/python2.7/site-packages/* /opt/conda/envs/python2/lib/python2.7/site-packages/
+RUN git clone https://github.com/LindleyLentati/TempoNest.git
 COPY Makefile /opt/pulsar/src/TempoNest/MultiNest/
+COPY Makefile.polychord /var/tmp/Makefile
 RUN bash -c "source activate python2 && cd /opt/pulsar/src/TempoNest && \
-              make clean && ./autogen.sh && CPPFLAGS=\"-I/opt/pulsar/include\" \
+             ./autogen.sh && CPPFLAGS=\"-I/opt/pulsar/include\" \
                 LDFLAGS=\"-L/opt/pulsar/lib\" ./configure --prefix=/opt/pulsar && cd PolyChord && \
                 cp /var/tmp/Makefile Makefile && make \
                  && make libchord.so && cp src/libchord* /usr/lib && cd ../ && \
